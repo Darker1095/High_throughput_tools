@@ -110,21 +110,29 @@ def get_unit_cell(cif_location, cutoff):
         elif (i.startswith('_cell_length_c')):
             c = float(i.split()[-1].strip().split('(')[0])
         elif (i.startswith('_cell_angle_alpha')):
-            alpha = float(i.split()[-1].strip().split('(')[0])
+            alpha = float(i.split()[-1].strip().split('(')[0]) * math.pi / 180
         elif (i.startswith('_cell_angle_beta')):
-            beta = float(i.split()[-1].strip().split('(')[0])
+            beta = float(i.split()[-1].strip().split('(')[0]) * math.pi / 180
         elif (i.startswith('_cell_angle_gamma')):
-            gamma = float(i.split()[-1].strip().split('(')[0])
+            gamma = float(i.split()[-1].strip().split('(')[0]) * math.pi / 180
             break
-    pi = 3.1415926
+    #计算晶胞体积;pi = 3.1415926
+    V =  a * b * c * (1 + 2 * math.cos(alpha) * math.cos(beta) * math.cos(gamma) - (math.cos(alpha))**2 - (math.cos(beta))**2 - (math.cos(gamma))**2) ** 0.5
 
-    a_length = a * math.sin(beta / 180 * pi)
-    b_length = b * math.sin(gamma / 180 * pi)
-    c_length = c * math.sin(alpha / 180 * pi)
+    # 计算晶胞各个面的表面积
+    base_area_x = b * c * math.sin(alpha)
+    base_area_y = a * c * math.sin(beta)
+    base_area_z = a * b * math.sin(gamma)
 
-    a_unitcell = int(2 * cutoff / a_length + 1)
-    b_unitcell = int(2 * cutoff / b_length + 1)
-    c_unitcell = int(2 * cutoff / c_length + 1)
+    # 计算各个方向的最小距离，即平行六面体各个方向的高，等于体积除以底面积
+    perpendicular_length_x = V / base_area_x
+    perpendicular_length_y = V / base_area_y
+    perpendicular_length_z = V / base_area_z
+
+    # 根据截断半径cutoff计算所需各方向的unit_cell数目
+    a_unitcell = math.ceil(2 * cutoff / perpendicular_length_x)
+    b_unitcell = math.ceil(2 * cutoff / perpendicular_length_y)
+    c_unitcell = math.ceil(2 * cutoff / perpendicular_length_z)
 
     return "{} {} {}".format(a_unitcell, b_unitcell, c_unitcell)
 
