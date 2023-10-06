@@ -51,7 +51,89 @@ class RASPA_Output_Data():
         pattern = r'Pressure:\s+(.*)\s+\[Pa\]'
         result = re.findall(pattern, self.output_string)
         return result[0]
+        
+    def get_He_void_fraction(self):
+        '''
+        返回[helium] Average Widom Rosenbluth-weight字符后的数值
+        '''
+        pattern = r'Average Widom Rosenbluth-weight:\s+(-?\d+\.?\d*)\s+'
+        result = re.findall(pattern, self.output_string)
+        return result
 
+    def get_Surface_Area(self,unit='m^2/cm^3'):
+        '''
+        返回Average surface area字符后的数值
+        ''' 
+        patterns = {'A^2':     r'Average surface area:\s+(-?\d+\.?\d*)\s+\+/-\s+(-?\d+\.?\d*)\s+\[A\^2\]', 
+                   'm^2/g':                          '\s+(-?\d+\.?\d*)\s+\+/-\s+(-?\d+\.?\d*)\s+\[m\^2/g\]',
+                   'm^2/cm^3':                       '\s+(-?\d+\.?\d*)\s+\+/-\s+(-?\d+\.?\d*)\s+\[m\^2/cm\^3\]'
+                   }
+        if unit not in patterns.keys():
+            raise ValueError('单位错误！')
+        result = {}
+        data = re.findall(patterns[unit], self.output_string)
+        result = data[0] if data else None
+        return result   
+
+    def get_adsorption_heat(self):
+        '''
+            返回吸附热(KJ/mol)，该数值使用波动法计算 fluctuation formula
+            返回值是一个字典，键是吸附质的名称，值是吸附热;
+        '''
+        result = {}
+        # 定义第一种情况下的正则表达式模式
+        pattern1 = r'Enthalpy of adsorption component \d+ \[(.*)\]\n\s*-*\n.*\n.*\n.*\n.*\n.*\n\s*-*\n.*\n\s+(\-?\d+\.?\d*)\s+'
+
+        # 定义第二种情况下的正则表达式模式
+        pattern2 = r'Total enthalpy of adsorption\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n\s+(\-?\d+\.?\d*)\s+'
+
+        # 尝试匹配pattern1
+        data1 = re.findall(pattern1, self.output_string)
+
+        if data1:
+            for i, j in zip(self.components, data1):
+                result[i] = j[1]  # 使用元组中的第二个元素作为吸附热值
+        else:
+            # 如果pattern1匹配不成功，则匹配pattern2
+            data2 = re.findall(pattern2, self.output_string)
+            if data2:
+                result["Total enthalpy of adsorption"] = data2[0]
+        return result
+
+    def get_adsorption_heat_infinite_dilution(self):
+        '''
+            返回无限稀释吸附热(KJ/mol)
+            返回值是一个字典，键是吸附质的名称，值是吸附热;
+        '''
+        pattern = r'Total energy:\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n\s+Average\s+(\-?\d+\.?\d*)\s+'
+        data = re.findall(pattern, self.output_string)
+        '''∆H = ∆U − RT = [Uhg] − [Uh] − [Ug] − RT
+           利用该公式进行吸附热换算，∆H单位为K，框架为刚性Uh = 0，气体分子能量Ug=0,能量主要来自气体分子与框架的相互作用
+        '''
+        data = [float(x) for x in data]
+        result = (data[0] - 300) * 8.314462618/1000
+        return result
+
+    def get_henry_coefficient(self):
+        '''
+            返回亨利系数(mol/kg/Pa)
+            返回值是一个字典，键是吸附质的名称，值是亨利系数;
+        '''
+        pattern = r'\[.*\]\s+Average Henry coefficient:\s+(-?\d+\.\d+e[+-]\d+|-?\d+\.?\d*)\s+'
+        data = re.findall(pattern, self.output_string)
+        result = {}
+        for i, j in zip(self.components, data):
+            result[i] = j
+        return result
+    
+    def get_Framework_density(self):
+        '''
+        返回Framework Density字符后的数值，单位是kg/m^3
+        '''
+        pattern = r'Framework Density:\s+(-?\d+\.?\d*)\s+\[kg/m\^3\]\s+'
+        result = re.findall(pattern, self.output_string)
+        return result
+    
     def get_excess_adsorption(self, unit='cm^3/g'):
         '''
             指定单位，返回超额吸附量，返回值是一个字典，键是吸附质的名称，值是吸附量
