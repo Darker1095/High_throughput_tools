@@ -70,7 +70,7 @@ First, change the parameters in `config.ini` to suit your needs, note that `zeo+
 zeo++_dir = /home/zeo++-0.3
 
 # 需要计算的材料的cif文件所在目录（The CIF files directory of the materials to be calculated）
-cif_dir = /home/RASPA_tools/test_cifs
+cif_dir = ../cifs
 
 # CPU核心数（Number of CPU cores on your computer）
 number_of_threads = 10
