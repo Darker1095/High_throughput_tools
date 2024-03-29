@@ -88,6 +88,8 @@ If the configuration is correct, the program will display a progress bar and out
 
 如果发现提取的结果出现两个相同的文件名（slurm作业管理系统测试可能会有），第二次可能会出现error,但是总数量没变，中间会缺少数据。解决方法是计算完成后使用zeo_extract.py脚本提取结果，并删除重复的结果文件。
 
+If the extracted results have the same file name (due to the slurm job management system testing), the second time may encounter an error, but the total number is not changed, and there will be missing data. The solution is to extract the results using the zeo_extract.py script after the calculation is completed, and delete the duplicate result files.
+
 ***
 
 ### raspa_parse
