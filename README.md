@@ -271,3 +271,13 @@ python main_adsorption.py
 在程序运行过程中，控制台会输出RASPA的日志，当前目录下会出现`RASPA_Output`文件夹和`adsorption_results.csv`文件，分别是RASPA的输出文件和结果汇总文件。运行结束时，控制台会输出"Finish!"。
 
 During the running process of the program, the console will output the RASPA log, and the `RASPA_Output` folder and the `adsorption_results.csv` file will appear in the current directory, which are the RASPA output files and the result summary file respectively. At the end of the run, the console will output "Finish!".
+
+## 注意事项 (Note)
+
+更新了源代码中计算相应扩胞参数的方法（源代码对于一些三斜晶胞无法正确扩胞），现在可以计算任意晶胞的Unitcell参数
+
+Updated the method of calculating the Unitcell parameters for certain cubic frameworks (the source code did not correctly calculate the Unitcell parameters for some trigonal frameworks), and now it can calculate the Unitcell parameters for any cubic framework.
+
+增加了更多RASPA计算描述的方法
+
+Added more ways to describe RASPA calculations.
