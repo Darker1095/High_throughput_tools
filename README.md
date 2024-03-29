@@ -274,9 +274,9 @@ During the running process of the program, the console will output the RASPA log
 
 ## 注意事项 (Note)
 
-更新了源代码中计算相应扩胞参数的方法（源代码对于一些三斜晶胞无法正确扩胞），现在可以计算任意晶胞的Unitcell参数
+更新了计算UnitCells参数的方法（源代码对于一些三斜晶胞无法正确扩胞），现在可以计算任意类型晶胞的UnitCells参数
 
-Updated the method of calculating the Unitcell parameters for certain cubic frameworks (the source code did not correctly calculate the Unitcell parameters for some trigonal frameworks), and now it can calculate the Unitcell parameters for any cubic framework.
+Updated the method of calculating the ***UnitCells*** parameter (the source code did not correctly calculate the ***UnitCells*** parameters for some trigonal frameworks), and now it can calculate the ***UnitCells*** parameters for any type of framework.
 
 增加了更多RASPA计算描述的方法
 
