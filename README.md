@@ -278,6 +278,6 @@ During the running process of the program, the console will output the RASPA log
 
 Updated the method of calculating the ***UnitCells*** parameter (the source code did not correctly calculate the ***UnitCells*** parameters for some trigonal frameworks), and now it can calculate the ***UnitCells*** parameters for any type of framework.
 
-增加了更多RASPA计算描述的方法
+增加了更多RASPA计算描述符的方法
 
-Added more ways to describe RASPA calculations.
+added more methods for RASPA calculation descriptors.
