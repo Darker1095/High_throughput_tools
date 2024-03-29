@@ -1,0 +1,25 @@
+SimulationType                MonteCarlo
+NumberOfCycles                25000
+NumberOfInitializationCycles  5000
+PrintEvery                    1000
+PrintPropertiesEvery          1000
+
+Forcefield                    UFF
+UseChargesFromCIFFile         yes
+
+Framework 0
+FrameworkName {cif_name}
+CutOffVDW {cutoff}
+UnitCells {unitcell}
+
+#HeliumVoidFraction 0.61
+ExternalTemperature 300.0
+ExternalPressure 0.0
+
+
+Component 0 MoleculeName             CO2
+            MoleculeDefinition       TraPPE
+            TranslationProbability   0.5
+            RotationProbability      0.5
+            ReinsertionProbability   0.5
+            CreateNumberOfMolecules  1
