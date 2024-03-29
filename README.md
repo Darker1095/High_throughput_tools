@@ -43,7 +43,7 @@ A collection of Python scripting tools for RASPA, which can be used for parallel
   ├── Surface_area        //表面积
     ├── config.ini          //配置文件
     ├── simulation_template.input    //RASPA输入文件的模板
-    ├── main_descriptors.py   //计算表面积的主程序
+    ├── main_surface_area.py   //计算表面积的主程序
 ```
 
 ## 用法 (Usage)
