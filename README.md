@@ -234,12 +234,12 @@ Its usage is very close to `main_isotherms.py`. First, change the parameters in 
 
 # RASPA的安装目录，即/bin, /lib, /share所在目录
 # The installation directory of RASPA, that is, the directory where /bin, /lib, /share are located
-RASPA_dir = /usr/local/RASPA
+RASPA_dir = /home/anaconda3/envs/raspa2
 
 # 设定为cif文件所在目录，程序会遍历目录中所有的cif文件并使用RASPA进行吸附模拟
 # Set this parameter to the directory of the CIF files.
 # The program will traverse all the cif files in the directory and use RASPA for adsorption simulation
-cif_location = ../test_cifs/
+cif_location = ../cifs/
 
 # 建议设定为cpu的核心数
 # Set this parameter to the number of CPU cores on your computer
@@ -247,7 +247,7 @@ max_threads = 10
 
 # 范德华力的截断半径，单位是埃
 # Cutoff radius of van der Waals force in Angstroms
-CutOffVDM = 12.0
+CutOffVDM = 12.8
 ```
 
 接下来，修改`simulation_template.input`，你可以根据计算需求增加、删除或修改一些RASPA参数，程序会根据此模板动态生成RASPA的输入文件——`simulation.input`。***请注意，下面这几行不能修改***：
