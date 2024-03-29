@@ -190,7 +190,7 @@ pressures = 100,300,500,1000,5000,10000,5e4,1e5
 
 # 范德华力的截断半径，单位是埃
 # Cutoff radius of van der Waals force in Angstroms
-CutOffVDM = 12.0
+CutOffVDM = 12.8
 ```
 
 接下来，修改`simulation_template.input`，你可以根据计算需求增加、删除或修改一些RASPA参数，程序会根据此模板动态生成RASPA的输入文件——`simulation.input`。***请注意，下面这几行不能修改***：
