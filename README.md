@@ -167,14 +167,14 @@ First, change the parameters in `config.ini` according to your needs. Note that 
 
 # RASPA的安装目录，即/bin, /lib, /share所在目录
 # The installation directory of RASPA, that is, the directory where /bin, /lib, /share are located
-RASPA_dir = /usr/local/RASPA
+RASPA_dir = /home/anaconda3/envs/raspa2
 
 # 如果只有1个cif需要计算，设定为cif文件所在位置，
 # 如果有多个cif需要计算，设定为cif文件所在目录，程序会遍历目录中所有的cif文件并计算等温线
 # If only one CIF needs to be calculated, set this parameter to the location of the CIF file.
 # If multiple CIFs need to be calculated, set this parameter to the directory of the CIF files.
 # The program will traverse all CIF files in the directory and calculate isotherms
-cif_location = ../test_cifs/
+cif_location = ../cifs/
 
 # 建议设定为cpu的核心数
 # Set this parameter to the number of CPU cores on your computer
@@ -273,6 +273,10 @@ python main_adsorption.py
 During the running process of the program, the console will output the RASPA log, and the `RASPA_Output` folder and the `adsorption_results.csv` file will appear in the current directory, which are the RASPA output files and the result summary file respectively. At the end of the run, the console will output "Finish!".
 
 ## 注意事项 (Note)
+
+建议使用conda安装RASPA，会自动安装fftw3等依赖库。
+
+It is recommended to use conda to install RASPA, which will automatically install the dependent libraries such as fftw3.
 
 更新了计算UnitCells参数的方法（源代码对于一些三斜晶胞无法正确扩胞），现在可以计算任意类型晶胞的UnitCells参数
 
