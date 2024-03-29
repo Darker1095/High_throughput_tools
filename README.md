@@ -67,16 +67,16 @@ First, change the parameters in `config.ini` to suit your needs, note that `zeo+
 ```ini
 [ZEO_CONFIG]
 # zeo++ 的安装目录（The installation directory of zeo++）
-zeo++_dir = /home/luxiuyang/zeo++-0.3
+zeo++_dir = /home/zeo++-0.3
 
 # 需要计算的材料的cif文件所在目录（The CIF files directory of the materials to be calculated）
-cif_dir = /home/luxiuyang/RASPA_tools/test_cifs
+cif_dir = /home/RASPA_tools/test_cifs
 
 # CPU核心数（Number of CPU cores on your computer）
 number_of_threads = 10
 
-# 计算比表面积所用的分子探针半径（Molecular probe radius used to calculate specific surface area）
-radius_of_area_probe = 0
+# 计算比表面积所用的分子探针半径, 这里使用分子动力学直径为3.64 Å的N2分子作为探针（Molecular probe radius used to calculate specific surface area，here we use a N2 molecule with molecular dynamics diameter of 3.64 Å as probe）
+radius_of_area_probe = 1.82
 
 # 计算孔隙率、孔体积所用的分子探针半径（Molecular probe radius used to calculate porosity）
 radius_of_porosity_probe = 0
