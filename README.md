@@ -28,15 +28,18 @@ A collection of Python scripting tools for RASPA, which can be used for parallel
   ├── Framework_density-Void_fraction   //框架密度-He孔隙率
     ├── config.ini          //配置文件
     ├── simulation_template.input    //RASPA输入文件的模板
-    ├── main_descriptors.py   //批量进行描述符计算的主程序
+    ├── main_Framework_density-He_void_fraction.py   //批量进行描述符计算的主程序
+
   ├── Heat_of_adsorption_inifite_dilution   //无限稀释吸附热
     ├── config.ini          //配置文件
     ├── simulation_template.input    //RASPA输入文件的模板
-    ├── main_descriptors.py   //批量进行描述符计算的主程序
+    ├── main_heat_of_adsorption.py   //批量进行描述符计算的主程序
+
   ├── Henry_coefficient   //亨利系数
     ├── config.ini          //配置文件
     ├── simulation_template.input    //RASPA输入文件的模板
-    ├── main_descriptors.py   //批量进行描述符计算的主程序
+    ├── main_henry_coefficient.py   //批量进行描述符计算的主程序
+
   ├── Surface_area        //表面积
     ├── config.ini          //配置文件
     ├── simulation_template.input    //RASPA输入文件的模板
