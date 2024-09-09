@@ -318,6 +318,11 @@ def main():
     cur_path = os.path.abspath(os.path.dirname(__file__))
     os.chdir(cur_path)
     raspa_dir, cif_dir, cifs, cutoffvdm, max_threads = check_parameters()
+
+    # 设置环境变量(如果不设置，slurm系统可能出现raspa路径错误)
+    os.environ['RASPA_DIR'] = raspa_dir
+    os.environ['LD_LIBRARY_PATH'] = os.path.join(raspa_dir, "lib")
+
     lock = Lock()
 
     with open("./simulation_template.input", "r") as f:
@@ -358,7 +363,7 @@ def main():
         os.chdir(cur_path)
 
     for t in threading.enumerate():
-        if t.is_alive() and t.getName() != "MainThread":
+        if t.is_alive() and t.name() != "MainThread":
             t.join()
 
     print("\033[0;30;42m\n完成！(Finish)\n\033[0m")
