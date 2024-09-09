@@ -363,7 +363,7 @@ def main():
         os.chdir(cur_path)
 
     for t in threading.enumerate():
-        if t.is_alive() and t.name() != "MainThread":
+        if t.is_alive() and t.name != "MainThread":
             t.join()
 
     print("\033[0;30;42m\n完成！(Finish)\n\033[0m")
