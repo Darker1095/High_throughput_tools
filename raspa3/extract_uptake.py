@@ -8,13 +8,11 @@ def extract_adsorption_data(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
 
-    # 定位"Loadings"部分
     loadings_start = content.find("Loadings")
     if loadings_start == -1:
         return None
     loadings_section = content[loadings_start:]
 
-    # 匹配每个组分的完整部分
     comp_pattern = re.compile(
         r'Component\s+\d+\s+\((.*?)\)\s*([\s\S]*?)(?=Component\s+\d+\s+\(|\Z)',
         re.DOTALL
@@ -26,7 +24,6 @@ def extract_adsorption_data(file_path):
     if not comp_blocks:
         return None
 
-    # 匹配Abs和Excess的平均值
     values_pattern = re.compile(
         r'Abs\. loading average\s+([\d\.eE+-]+).*?\[molecules/cell\].*?'
         r'Abs\. loading average\s+([\d\.eE+-]+).*?\[mol/kg-framework\].*?'
@@ -79,7 +76,6 @@ def write_to_csv(rows, output_file):
         for unit in units:
             headers.append(f"{comp}_{unit}")
     
-    # 获取当前路径下的cif文件名
     cif_files = [f for f in os.listdir('.') if f.endswith('.cif')]
     cif_name = os.path.splitext(cif_files[0])[0]
     for row in rows:
@@ -97,12 +93,12 @@ if __name__ == "__main__":
     for file in files:
         data = extract_adsorption_data(file)
         results.append(data)
-        # 提取温度和压力
+
         match = re.search(r'output_(\d+)_([\deE\+\-]+)\.s\d+\.txt', os.path.basename(file))
         if match:
             temp = match.group(1)
             pressure = float(match.group(2))/1e5
-            # 提取组分名
+
             if data:
                 comps = [k.split('_')[0] for k in data.keys() if '_absolute_molecules/uc' in k]
                 comps_str = '_'.join(comps)
