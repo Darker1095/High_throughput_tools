@@ -224,8 +224,8 @@ def work(cif_dir: str, cif_file: str, gRASPA_dir: str, result_file: str, compone
     # 复制cif文件到工作目录
     shutil.copy(os.path.join(cif_dir, cif_file), cmd_dir)
     
-    # 复制mix_FF目录下的所有文件到工作目录
-    FF_dir = os.path.join(curr_dir, "mix_FF")   
+    # 复制FF目录下的所有文件到工作目录
+    FF_dir = os.path.join(curr_dir, "FF")   
     for filename in os.listdir(FF_dir):
         src_file = os.path.join(FF_dir, filename)
         dst_file = os.path.join(cmd_dir, filename)
