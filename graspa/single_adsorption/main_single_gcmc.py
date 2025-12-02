@@ -5,6 +5,7 @@ import re
 import shutil
 import threading
 import time
+import subprocess
 from queue import Queue
 from threading import Lock
 
@@ -234,15 +235,20 @@ def work(cif_dir: str, cif_file: str, gRASPA_dir: str, result_file: str, compone
     # 处理力场文件
     process_forcefield_files(cmd_dir, input_text)
     
-    cmd = "gRASPA > output.txt"
-    with open(os.path.join(cmd_dir, "simulation.input"), "w") as f1:
+    cmd = ["gRASPA"]
+    sim_input_path = os.path.join(cmd_dir, "simulation.input")
+    with open(sim_input_path, "w") as f1:
         f1.write(input_text)
-        f1.close()
-    os.chdir(cmd_dir)
-    os.system(cmd)
 
-    # 检查Output.txt是否包含END OF PROGRAM
+    # Run gRASPA in the specific command directory without changing global cwd
     output_txt_path = os.path.join(cmd_dir, "output.txt")
+    try:
+        with open(output_txt_path, "w") as out:
+            subprocess.run(cmd, stdout=out, stderr=subprocess.STDOUT, cwd=cmd_dir, check=False)
+    except Exception:
+        # If subprocess.run fails for any reason, proceed to waiting/checking as before
+        pass
+
     if wait_for_task_finish(output_txt_path):
         lock.acquire()
         try:

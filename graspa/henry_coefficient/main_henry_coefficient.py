@@ -81,9 +81,9 @@ def process_forcefield_files(cmd_dir, input_text):
         labels = []
         with open(filename) as f:
             for line in f:
-                if("_atom_" in line):
+                if "_atom_" in line:
                     ncols += 1
-                if(ncols > 0 and count > 0 and not("_atom_" in line)):
+                if ncols > 0 and count > 0 and "_atom_" not in line:
                     spline = line.split()
                     if not (ncols == len(spline)):
                         raise Exception("CIF FILE WRONG!")
@@ -102,14 +102,14 @@ def process_forcefield_files(cmd_dir, input_text):
         labels = []
         with open(filename) as f:
             for line in f:
-                if(count == 5):
+                if count == 5:
                     spline = line.split()
                     NAtom = int(spline[0])
-                if("atomic positions" in line):
-                    start = count
-                if(NAtom > 0 and 'atomic positions' in line):
+                if "atomic positions" in line:
+                    pass
+                if NAtom > 0 and 'atomic positions' in line:
                     Atomcount = 0
-                if(NAtom > 0 and Atomcount < NAtom and not("#" in line) and count > 5):
+                if NAtom > 0 and Atomcount < NAtom and "#" not in line and count > 5:
                     spline = line.split()
                     if len(spline) > 1:
                         labels.append(spline[1])
@@ -271,86 +271,51 @@ def work(cif_dir: str, cif_file: str, gRASPA_dir: str, result_file: str, compone
 
 
 def get_result(output_str: str, components: list, cif_name: str):
-    # 直接按行读取并用固定行号偏移提取
+    # 提取亨利系数
     content = output_str.splitlines()
     res = {}
     res["name"] = cif_name
     res["finished"] = "True"  # 假设只要能提取到数据就是完成
     res["warning"] = ""
 
-    # 默认全部为空
-    avg_heat_of_adsorption1 = avg_heat_of_adsorption2 = ""
-    loading_units = {
-        "# MOLECULES 1": "",
-        'Framework mass': "",
-        "mg/g 1": "",
-        "mol/kg 1": "",
-        "g/L 1": "",
-        '# MOLECULES 2': "",
-        'mg/g 2': "",
-        'mol/kg 2': "",
-        'g/L 2': ""
-    }
+    # 初始化亨利系数变量
+    avg_henry_coefficient = ""
+    henry_coefficient_error = ""
 
-    for i, line in enumerate(content):
-        if "BLOCK AVERAGES (HEAT OF ADSORPTION: kJ/mol)" in line:
+    # 查找平均亨利系数和误差
+    for line in content:
+        if "Averaged Henry Coefficient [mol/kg/Pa]" in line:
             try:
-                avg_heat_of_adsorption1 = content[i+7].split(',')[0].split()[-1].strip()
-                avg_heat_of_adsorption2 = content[i+15].split(',')[0].split()[-1].strip()
-            except Exception:
-                pass
-        if 'BLOCK AVERAGES (LOADING: # MOLECULES)' in line:
-            try:
-                loading_units["# MOLECULES 1"] = content[i+16].split(',')[0].split()[-1].strip()
-                loading_units["# MOLECULES 2"] = content[i+25].split(',')[0].split()[-1].strip()
-            except Exception:
-                pass
-        if 'BLOCK AVERAGES (LOADING: mg/g)' in line:
-            try:
-                loading_units['Framework mass'] = content[i+3].split(' ')[3].strip()
-                loading_units["mg/g 1"] = content[i+19].split(',')[0].split()[-1].strip()
-                loading_units["mg/g 2"] = content[i+29].split(',')[0].split()[-1].strip()
-            except Exception:
-                pass
-        if 'BLOCK AVERAGES (LOADING: mol/kg)' in line:
-            try:
-                loading_units["mol/kg 1"] = content[i+19].split(',')[0].split()[-1].strip()
-                loading_units["mol/kg 2"] = content[i+29].split(',')[0].split()[-1].strip()
-            except Exception:
-                pass
-        if 'BLOCK AVERAGES (LOADING: g/L)' in line:
-            try:
-                loading_units["g/L 1"] = content[i+8].split(',')[0].split()[-1].strip()
-                loading_units["g/L 2"] = content[i+17].split(',')[0].split()[-1].strip()
+                # 提取亨利系数值和误差
+                parts = line.split(":")[1].strip().split("+/-")
+                avg_henry_coefficient = parts[0].strip()
+                if len(parts) > 1:
+                    henry_coefficient_error = parts[1].strip()
+                break
             except Exception:
                 pass
 
-    # 组装结果
-    # components[0]、components[1] 分别为mol1、mol2
-    res[components[0] + "_Heat_of_adsorption_kJ/mol"] = avg_heat_of_adsorption1
-    res[components[1] + "_Heat_of_adsorption_kJ/mol"] = avg_heat_of_adsorption2
-    res[components[0] + "_loading_molecules"] = loading_units["# MOLECULES 1"]
-    res[components[1] + "_loading_molecules"] = loading_units["# MOLECULES 2"]
-    res[components[0] + "_loading_mg/g"] = loading_units["mg/g 1"]
-    res[components[1] + "_loading_mg/g"] = loading_units["mg/g 2"]
-    res[components[0] + "_loading_mol/kg"] = loading_units["mol/kg 1"]
-    res[components[1] + "_loading_mol/kg"] = loading_units["mol/kg 2"]
-    res[components[0] + "_loading_g/L"] = loading_units["g/L 1"]
-    res[components[1] + "_loading_g/L"] = loading_units["g/L 2"]
+    # 将数值转换为科学计数法格式
+    def to_scientific_notation(value_str):
+        try:
+            value = float(value_str)
+            # 使用科学计数法格式化，保留8位有效数字
+            scientific_format = f"{value:.8e}"
+            return scientific_format
+        except:
+            return value_str  # 如果无法转换，返回原字符串
+
+    # 添加亨利系数到结果中（转换为科学计数法）
+    res["Average_Henry_Coefficient"] = to_scientific_notation(avg_henry_coefficient)
+    res["Henry_Coefficient_Error"] = to_scientific_notation(henry_coefficient_error)
 
     return res
 
-
 def get_field_headers(components: list):
-    headers = ["name", "finished"]
-    for c in components:
-        headers.append(c + "_Heat_of_adsorption_kJ/mol")
-        headers.append(c + "_loading_molecules")
-        headers.append(c + "_loading_mg/g")
-        headers.append(c + "_loading_mol/kg")
-        headers.append(c + "_loading_g/L")          
-    headers.append("warning")
+    # 只保留必要字段
+    headers = ["name", "finished", "Average_Henry_Coefficient", "Henry_Coefficient_Error", "warning"]
     return headers
+
 
 def get_components_from_input(input_text: str):
     components = re.findall(r'MoleculeName\s+(.+)', input_text)
@@ -476,7 +441,7 @@ def main():
     # 修改此处，生成新的文件名
     result_file = os.path.join(
         cur_path,
-        f"{components[0]}_{components[1]}_{temperature}_{pressure}.csv"
+        f"{components[0]}_{temperature}_{pressure}.csv"
     )
 
     if os.path.exists(result_file):
@@ -509,7 +474,6 @@ def main():
                                                      result_file, components, headers, input_text, lock, q))
         thread.start()
         time.sleep(0.3)
-        os.chdir(cur_path)
 
     for t in threading.enumerate():
         if t.is_alive() and t.getName() != "MainThread":
